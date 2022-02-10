@@ -14,7 +14,7 @@ from pyrogram.errors import UserMigrate, RPCError
 
 from converter.consts import *
 from converter.tools import *
-from proxy import SocksProxy
+from proxy import socks_proxy
 
 FILEOPTION_SAFE = 1
 FILEOPTION_USER = 2
@@ -25,7 +25,6 @@ system_version = 'Android 10.2'
 
 with open('config.json', 'r') as file_config:
     try:
-        file_config.seek(0)
         config = json.load(file_config)
         main_api_id = config.get('api_id', None)
         main_api_hash = config.get('api_hash', '')
@@ -56,7 +55,6 @@ def tdesktop_decrypt(data: BinaryIO, auth_key):
     encrypted_data = data.read()
 
     aes_key, aes_iv = old_aes_calculate(message_key, auth_key, False)
-    # aes_key, aes_iv = tools.aes_calculate(message_key, auth_key, False)
     decrypted_data = tgcrypto.ige256_decrypt(encrypted_data, aes_key, aes_iv)
 
     if message_key != hashlib.sha1(decrypted_data).digest()[:16]:
@@ -272,7 +270,7 @@ async def convert(path: Path):
                 session_name = f'session__{path.parts[-1]}_{ind + 1}_{user_id}'
             workdir.mkdir(parents=True, exist_ok=True)
 
-            client = pyrogram.Client(session_name, workdir=str(workdir),
+            client = pyrogram.Client(session_name, workdir=str(workdir), proxy=socks_proxy.get_proxy_dict(),
                                      api_id=main_api_id, api_hash=main_api_hash, device_model=device_model,
                                      system_version=system_version, app_version=app_version)
             client.load_config()

@@ -21,6 +21,7 @@ Choose method:
     match menu:
         case '1':
             asyncio.run(converter.main())
+            return
         case '2':
             process = CrawlerProcess(settings={'LOG_LEVEL': 'WARNING'})
             process.crawl(TelegramApiScraper)

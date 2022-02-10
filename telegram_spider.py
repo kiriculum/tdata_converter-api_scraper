@@ -1,11 +1,11 @@
 import csv
-import hashlib
+import datetime
 import json
 import logging
 import pathlib
 import random
 import re
-import time
+from datetime import datetime
 from pathlib import Path
 
 import pyrogram
@@ -86,9 +86,9 @@ class TelegramApiScraper(scrapy.Spider):
                     b'DNT': 1}
 
     def open_spider(self):
-        sub_folder = pathlib.Path('output_data')
+        sub_folder = pathlib.Path('output_scrapper')
         sub_folder.mkdir(exist_ok=True)
-        self.filename = f'output_{hashlib.md5(str(time.time()).encode()).hexdigest()[:8]}.csv'
+        self.filename = f'output_{datetime.today().strftime("%Y-%m-%D_%H-%M")}'
         self.file = open(sub_folder / self.filename, 'w', newline='')
         self.writer = csv.writer(self.file)
         self.writer.writerow(UserData.ordered_fields)
@@ -139,7 +139,7 @@ class TelegramApiScraper(scrapy.Spider):
         while self.sessions:
             file = self.sessions.pop()
             client = pyrogram.Client(file.parts[-1].rstrip('.session'), api_id=self.main_api_id,
-                                     proxy=proxy.SocksProxy.get_proxy(),
+                                     proxy=proxy.socks_proxy.get_proxy_dict(),
                                      api_hash=self.main_api_hash, workdir=str(file.parent))
             try:
                 client.start()

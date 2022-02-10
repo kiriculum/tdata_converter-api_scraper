@@ -1,1 +1,6 @@
-/output_data/
+/output_sessions/
+/output_scrapper/
+/main.spec
+/dist/
+/build/
+/.idea/
