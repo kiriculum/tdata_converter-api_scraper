@@ -1,7 +1,7 @@
 {
   "api_id": 0,
   "api_hash": "",
-  "2fa_password": "ExamplePassword",
-  "hint": "Some hint",
+  "2fa_password": "",
+  "password_hint": "",
   "email": "some@email.com"
 }

@@ -7,7 +7,7 @@ from telegram_spider import TelegramApiScraper
 
 
 def main():
-    intro = '''Welcome to telegram api id/hash scraper tool.
+    intro = '''Welcome to tdata converter and api id/hash collector.
 Choose method:
 1 - Mass convert(extract) tdata folders to .session files (without user checking)
 2 - Scrape api id/hashes for existing .session files

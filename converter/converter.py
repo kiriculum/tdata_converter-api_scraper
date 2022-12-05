@@ -29,7 +29,7 @@ with open('config.json', 'r') as file_config:
         main_api_id = config.get('api_id', None)
         main_api_hash = config.get('api_hash', '')
         password = config.get('2fa_password', '')
-        hint = config.get('hint', '')
+        hint = config.get('password_hint', '')
         email = config.get('email', None)
     except json.decoder.JSONDecodeError:
         raise AttributeError('No config.json file or bad format')
@@ -262,7 +262,7 @@ async def convert(path: Path):
             keys = user['data'][0]
             main_dc_id = user['data'][1]
             dc_id = main_dc_id if main_dc_id in keys else \
-                2 if 2 in keys else next(iter(keys.keys()))
+                2 if 2 in keys else next(iter(keys))
             workdir = Path('output_sessions')
             session_name = f'session_{path.parts[-1]}_{user_id}'
             if not CONSOLIDATE:
@@ -282,6 +282,7 @@ async def convert(path: Path):
             await client.storage.is_bot(False)
             try:
                 await client.start()
+            # Catches Migrate tg event to switch to another DC and save corresponding auth key
             except UserMigrate as e:
                 await client.load_session()
                 await client.storage.dc_id(e.x)
@@ -297,7 +298,8 @@ async def convert(path: Path):
                 os.remove(workdir / f'{session_name}.session')
                 continue
             try:
-                await client.enable_cloud_password(password, hint, email)
+                if password:
+                    await client.enable_cloud_password(password, hint, email)
             except ValueError:
                 print(f'Could not set 2fa for client {session_name} - password is already set')
 
