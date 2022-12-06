@@ -255,7 +255,7 @@ async def convert(path: Path):
     try:
         users = tdesktop(path, dict())
         if not users:
-            print('No user sessions were extracted')
+            print(f'No user sessions were extracted from {path}')
             return
         for ind, user in enumerate(users):
             user_id = user['user_id']
